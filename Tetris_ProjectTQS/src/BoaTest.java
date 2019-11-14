@@ -7,34 +7,23 @@ public class BoaTest {
 	@Test
 	public void test() {
 		
-	//Prova de caixa Negra ---- Mètode changeBoat(string name) ---- 
-	//Comprovem que li canvia el nom del tipus de vaixell correctament
-	//Següents proves aquest mètode canviara la langitud del vaixell 	
+	//Prova de caixa Negra --- getters ------------
 		
-		Boat b = new Boat();
+		Boat b1 = new Boat("Portaavio",5);
+		Boat b2 = new Boat("Creuer",3);
+		Boat b3 = new Boat("Destructor",4);
+		Boat b4 = new Boat("Fragata", 2);
 		
-		String name;
-		String boatName= "Portaavio";
+		assertEquals(b1.getName(),"Portaavio");
+		assertEquals(b2.getName(),"Creuer");
+		assertEquals(b3.getName(),"Destructor");
+		assertEquals(b4.getName(),"Fragata");
 		
-		b.ChangeBoat(boatName);
-		
-		name=b.getName();
-		
-		assertEquals(name,boatName);
-		
-		boatName="Creuer";
-		
-		name=b.getName();
-		
-		assertEquals(name,boatName);
-		
-		boatName="Fragata";
-		
-		name=b.getName();
-		
-		assertEquals(name,boatName);
-		
-		
+		assertEquals(b1.getLongitud(),5);
+		assertEquals(b2.getLongitud(),3);
+		assertEquals(b3.getLongitud(),4);
+		assertEquals(b4.getLongitud(),2);
+	
 		
 		
 		
