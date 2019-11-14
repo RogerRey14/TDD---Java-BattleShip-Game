@@ -13,19 +13,26 @@ public class BoaTest {
 		
 		Boat b = new Boat();
 		
+		String name;
 		String boatName= "Portaavio";
 		
 		b.ChangeBoat(boatName);
 		
-		assertEquals(b.getName(),"Portaavio");
+		name=b.getName();
+		
+		assertEquals(name,boatName);
 		
 		boatName="Creuer";
 		
-		asserEquals(b.getName(),"Creuer");
+		name=b.getName();
+		
+		assertEquals(name,boatName);
 		
 		boatName="Fragata";
 		
-		asserEquals(b.getName(),"Fragata");
+		name=b.getName();
+		
+		assertEquals(name,boatName);
 		
 		
 		
