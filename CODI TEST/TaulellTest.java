@@ -7,11 +7,10 @@ public class TaulellTest {
 
 	
 	@Test
-	public void test() {
+	public void testTaulell() {
 		
 		//constructor testing
-		System.out.print("\n\n");
-		
+
 		Taulell taulell= new Taulell(10,10);
 
 		
@@ -27,10 +26,44 @@ public class TaulellTest {
 				("  9 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | \n")+("----|---|---|---|---|---|---|---|---|---|---| \n")+
 				(" 10 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | \n")+("----|---|---|---|---|---|---|---|---|---|---| \n");
 	 	
-		//System.out.print(taulell_copia);
-		
 		assertEquals(taulell.get_string_taulell(), taulell_copia);
 		
+	}
+	
+	@Test
+	public void testColocarVaixells ()
+	{
+	
+		Taulell taulell = new Taulell(10,10);
+
+		taulell.colocaVaixell(1, 2, 2, false);
+		taulell.colocaVaixell(2, 5, 3, true);
+		taulell.colocaVaixell(4, 1, 4, true);
+		taulell.colocaVaixell(6, 1, 5, true);
+
+		
+		//Comprovacio Fragata
+		assertEquals(taulell.getValor(1, 2), 1);
+		assertEquals(taulell.getValor(2, 2), 1);
+
+		//Comprovacio Creuer
+		assertEquals(taulell.getValor(2, 5), 1);
+		assertEquals(taulell.getValor(2, 6), 1);
+		assertEquals(taulell.getValor(2, 7), 1);
+		
+		//Comprovacio Destructor
+		assertEquals(taulell.getValor(4, 1), 1);
+		assertEquals(taulell.getValor(4, 2), 1);
+		assertEquals(taulell.getValor(4, 3), 1);
+		assertEquals(taulell.getValor(4, 4), 1);
+		
+		//Comprovació Portaviones
+		assertEquals(taulell.getValor(6, 1), 1);
+		assertEquals(taulell.getValor(6, 2), 1);
+		assertEquals(taulell.getValor(6, 3), 1);
+		assertEquals(taulell.getValor(6, 4), 1);
+		assertEquals(taulell.getValor(6, 5), 1);
+
 	}
 
 }
