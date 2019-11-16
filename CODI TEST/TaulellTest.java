@@ -6,6 +6,7 @@ import java.lang.String;
 public class TaulellTest {
 
 	
+	//Test de caixa negra per comprovar que el taulell s'ha construit correctament.
 	@Test
 	public void testTaulell() {
 		
@@ -30,6 +31,7 @@ public class TaulellTest {
 		
 	}
 	
+	//test de caixa negre per comprovar que els vaixells s'han colocat correctament dins la matriu
 	@Test
 	public void testColocarVaixells ()
 	{
@@ -42,22 +44,22 @@ public class TaulellTest {
 		taulell.colocaVaixell(6, 1, 5, true);
 
 		
-		//Comprovacio Fragata
+		//Comprovacio Fragata dins taulell
 		assertEquals(taulell.getValor(1, 2), 1);
 		assertEquals(taulell.getValor(2, 2), 1);
 
-		//Comprovacio Creuer
+		//Comprovacio Creuer dins taulell
 		assertEquals(taulell.getValor(2, 5), 1);
 		assertEquals(taulell.getValor(2, 6), 1);
 		assertEquals(taulell.getValor(2, 7), 1);
 		
-		//Comprovacio Destructor
+		//Comprovacio Destructor dins taulell
 		assertEquals(taulell.getValor(4, 1), 1);
 		assertEquals(taulell.getValor(4, 2), 1);
 		assertEquals(taulell.getValor(4, 3), 1);
 		assertEquals(taulell.getValor(4, 4), 1);
 		
-		//Comprovació Portaviones
+		//Comprovació Portaviones dins taulell
 		assertEquals(taulell.getValor(6, 1), 1);
 		assertEquals(taulell.getValor(6, 2), 1);
 		assertEquals(taulell.getValor(6, 3), 1);
