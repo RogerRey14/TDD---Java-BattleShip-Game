@@ -17,6 +17,8 @@ public static final int ENFONSAT =  4;
 	private String caracter="|   ";
 	private String string_taulell;
 	
+	private NumAleatori random;
+	
 	Taulell(int mida_x, int mida_y ) {
 		
 		mida_horitzontal=mida_x;
@@ -35,7 +37,7 @@ public static final int ENFONSAT =  4;
 	public String get_string_taulell() { return string_taulell;}
 	
 	//Constrium la matriu 10x10
-	private String Construeix_Taulell(int[][] matriu2) {
+	public String Construeix_Taulell(int[][] matriu2) {
 		
 		String taulell = "";
 		taulell = taulell+("    | A | B | C | D | E | F | G | H | I | J | \n");
@@ -47,7 +49,7 @@ public static final int ENFONSAT =  4;
 			taulell = taulell+(" " + (i+1) + " |");
 			for (int j = 0; j < mida_horitzontal; j++)
 			{
-				taulell = taulell+(" " + matriuTaulell[i][j] + " |");
+				taulell = taulell+(" " + this.traductor(matriuTaulell[i][j]) + " |");
 			}
 			taulell = taulell + " \n";
 		}	
@@ -56,6 +58,8 @@ public static final int ENFONSAT =  4;
 		
 		return taulell;
 	}
+	
+	public int[][] getMatriu(){return this.matriuTaulell;}
 	
 	
 	
@@ -66,83 +70,104 @@ public static final int ENFONSAT =  4;
 	public boolean hihaVaixell(int x, int y)
 	{
 		
-		if (this.matriuTaulell[x][y]==AIGUA)
-			return false;
-		else
+		if (this.matriuTaulell[x][y]==VAIXELL)
 			return true;
+		else
+			return false;
 		
 	}
 	
 	
 	//Es coloca el vaixell a al taulell, comprovant totes les posicions.
-	public void colocaVaixell(int x, int y, int mida, boolean horitzontal) 
+	public boolean colocaVaixell(int x, int y, int mida, boolean horitzontal) 
 	{
+		boolean colocat=false;
+		boolean vaixell = false;
+		if(x<0 || x>9) 
+		{
+			return colocat;
+		}
+		if(y<0 || y>9) 
+		{
+			return colocat;
+		}
+		
+		
 		
 		if(hihaVaixell(x,y)) 
 		{
 			
-			System.out.println( "Posició ocupada per un vaixell");
+			//System.out.println( "Posició ocupada per un vaixell");
 			
-			//return false;
+			return colocat;
 			
 		}
 		else 
 		{
 			
-			if(x>=0 && x<=9) 
-			{
-				
-				if(y>=0 && y<=9) 
-				{
-					//Posició passada per paràmetre és vàlida, ara comprovar la mida i el sentit 
+			//Posició passada per paràmetre és vàlida, ara comprovar la mida i el sentit 
 					
-					if(horitzontal) 
+					if(!horitzontal) 
 					{
-						for(int i=0; i<mida;i++)
+						if(x+mida-1 <= 9) 
 						{
-							if(x+i>=0 && x+i<=9)
-								this.matriuTaulell[x+i][y]= VAIXELL;
-							else
-							{
-								System.out.println( "Posició 'x' fora del taulell");
-								//return false; 
+							int i = 0;
+							while(!vaixell && i<mida) {
+								if (!hihaVaixell(x+i,y)) {
+									i++;
+								}
+								else {
+									vaixell = true;
+								}
+							}
+							if(!vaixell) {
+								for(i = 0; i<mida;i++)
+								{
+									
+									this.matriuTaulell[x+i][y]= VAIXELL;
+									
+								}
+								colocat=true;
+								return colocat;
 							}
 							
 						}
 						
+						
 					}
-					else //posició vertical
+					else //posició horitzontal
 					{
-						for(int i=0; i<mida;i++)
+						if(y+mida-1 <= 9) 
 						{
-							if(y+i>=0 && y+i<=9)
-								this.matriuTaulell[x][y+i]= VAIXELL;
-							else 
-							{
-								System.out.println( "Posició 'y' fora del taulell");
-								//return false; 
+							int i = 0;
+							while(!vaixell && i<mida) {
+								if (!hihaVaixell(x,y+i)) {
+									i++;
+								}
+								else {
+									vaixell = true;
+								}
 							}
-						}
+							if(!vaixell) {
+								for(i = 0; i<mida;i++)
+								{
+									
+									this.matriuTaulell[x][y+i]= VAIXELL;
+									
+								}
+								colocat=true;
+								return colocat;
+							}
 					}
-					
-				}
-				else
-				{
-					System.out.println( "Posició 'y' fora del taulell");
-					//return false;  
-				}
-				
-			}
-			else
-			{
-				System.out.println( "Posició 'x' fora del taulell");
-				//return false; 
 			}
 			
 		}
 		
+		return colocat;
 		
 	}
+	
+	
 	
 	
 	//Retorna el valor de la posició passada per paràmetre de la matriu
@@ -158,5 +183,66 @@ public static final int ENFONSAT =  4;
 
 	}
 	
+	
+	
+	//Traduim els valors del taulell original per caràcters de tipo char, per a que visualment sigui més fàcil indenticar-ho
+	public char traductor(int constant)
+	{
+		switch (constant)
+		{
+		case VAIXELL:
+			return 'V';
+		case AIGUA:
+			return 'A';
+		case TOCAT:
+			return 'x';
+		case ENFONSAT:
+			return 'X';
+		default:
+			return 'o';
+		
+		}
+
+	}
+	
+	public void setRandom(NumAleatori option)
+	{
+		this.random=option;
+		
+	}
+	
+	public void creaTaulellIA()
+	{
+		int n=5;
+		boolean horitzontal;
+		boolean colocat=false;
+		
+		while(n!=1) {
+			
+			colocat=false;
+			
+			//generar randoms x, y, horitzontal
+			int x=this.random.generaNumeroAleatori(0, 9);
+			int y=this.random.generaNumeroAleatori(0, 9);
+			int mida=n;
+			int horitzontalaux=random.generaNumeroAleatori(0, 1);
+			
+			
+			if(horitzontalaux==1)
+				horitzontal=true;
+			else
+				horitzontal=false;
+					
+			colocat=this.colocaVaixell(x, y, mida, horitzontal);
+			
+		
+			if(colocat==true)
+				n--;
+		}
+		
+	}
+	
+	
 }
-//para comprobar tablero comparar el string (bueno con el constructor y eso)
+
+
