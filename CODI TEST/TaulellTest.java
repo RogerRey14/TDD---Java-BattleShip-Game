@@ -20,21 +20,37 @@ public class TaulellTest {
 		Taulell taulell= new Taulell(10,10);
 
 		
-		String taulell_copia = ("    | A | B | C | D | E | F | G | H | I | J | \n")+("----|---|---|---|---|---|---|---|---|---|---| \n")+
-				("  1 | o | o | o | o | o | o | o | o | o | o | \n")+("----|---|---|---|---|---|---|---|---|---|---| \n")+
-				("  2 | o | o | o | o | o | o | o | o | o | o | \n")+("----|---|---|---|---|---|---|---|---|---|---| \n")+
-				("  3 | o | o | o | o | o | o | o | o | o | o | \n")+("----|---|---|---|---|---|---|---|---|---|---| \n")+
-				("  4 | o | o | o | o | o | o | o | o | o | o | \n")+("----|---|---|---|---|---|---|---|---|---|---| \n")+
-				("  5 | o | o | o | o | o | o | o | o | o | o | \n")+("----|---|---|---|---|---|---|---|---|---|---| \n")+
-				("  6 | o | o | o | o | o | o | o | o | o | o | \n")+("----|---|---|---|---|---|---|---|---|---|---| \n")+
-				("  7 | o | o | o | o | o | o | o | o | o | o | \n")+("----|---|---|---|---|---|---|---|---|---|---| \n")+
-				("  8 | o | o | o | o | o | o | o | o | o | o | \n")+("----|---|---|---|---|---|---|---|---|---|---| \n")+
-				("  9 | o | o | o | o | o | o | o | o | o | o | \n")+("----|---|---|---|---|---|---|---|---|---|---| \n")+
-				(" 10 | o | o | o | o | o | o | o | o | o | o | \n")+("----|---|---|---|---|---|---|---|---|---|---| \n");
+		String taulell_copia = ("   | A | B | C | D | E | F | G | H | I | J | \n")+("---|---|---|---|---|---|---|---|---|---|---| \n")+
+				(" 0 | o | o | o | o | o | o | o | o | o | o | \n")+("---|---|---|---|---|---|---|---|---|---|---| \n")+
+				(" 1 | o | o | o | o | o | o | o | o | o | o | \n")+("---|---|---|---|---|---|---|---|---|---|---| \n")+
+				(" 2 | o | o | o | o | o | o | o | o | o | o | \n")+("---|---|---|---|---|---|---|---|---|---|---| \n")+
+				(" 3 | o | o | o | o | o | o | o | o | o | o | \n")+("---|---|---|---|---|---|---|---|---|---|---| \n")+
+				(" 4 | o | o | o | o | o | o | o | o | o | o | \n")+("---|---|---|---|---|---|---|---|---|---|---| \n")+
+				(" 5 | o | o | o | o | o | o | o | o | o | o | \n")+("---|---|---|---|---|---|---|---|---|---|---| \n")+
+				(" 6 | o | o | o | o | o | o | o | o | o | o | \n")+("---|---|---|---|---|---|---|---|---|---|---| \n")+
+				(" 7 | o | o | o | o | o | o | o | o | o | o | \n")+("---|---|---|---|---|---|---|---|---|---|---| \n")+
+				(" 8 | o | o | o | o | o | o | o | o | o | o | \n")+("---|---|---|---|---|---|---|---|---|---|---| \n")+
+				(" 9 | o | o | o | o | o | o | o | o | o | o | \n")+("---|---|---|---|---|---|---|---|---|---|---| \n");
 	 	
 		assertEquals(taulell.get_string_taulell(), taulell_copia);
 		
 	}
+	
+	@Test
+	public void TesthihaVaixell()
+	{
+		Taulell taulell = new Taulell(10,10);
+		
+		taulell.colocaVaixell(0, 0, 2, false);
+		
+		assertTrue(taulell.hihaVaixell(0, 0));
+		assertTrue(taulell.hihaVaixell(1, 0));
+		assertFalse(taulell.hihaVaixell(3, 0));
+		assertFalse(taulell.hihaVaixell(0, 1));
+		assertFalse(taulell.hihaVaixell(1, 1));
+		assertFalse(taulell.hihaVaixell(3, 3));
+	}
+	
 	
 	//test de caixa negre per comprovar que els vaixells s'han colocat correctament dins la matriu
 	@Test
@@ -131,4 +147,56 @@ public class TaulellTest {
 	}
 	*/
 
+	@Test
+	public void disparaTest() {
+		
+		Taulell taulell= new Taulell(10,10);
+		Taulell taulellVictima= new Taulell(10,10);
+		//coloquem vaixells correctament
+		taulellVictima.colocaVaixell(1, 2, 2, false);
+		taulellVictima.colocaVaixell(2, 5, 3, true);
+		taulellVictima.colocaVaixell(4, 1, 4, true);
+		taulellVictima.colocaVaixell(6, 1, 5, true);
+		
+		
+		
+		assertTrue(taulell.dispara(taulellVictima,4,2)); //hay barco
+		assertFalse(taulell.dispara(taulellVictima,4,2));//disparo a un barco ya tocado 
+		assertTrue(taulell.dispara(taulellVictima,2,2)); 
+		assertTrue(taulell.dispara(taulellVictima,6,4)); 
+		
+		
+		assertFalse(taulell.dispara(taulellVictima,0,0)); 
+		assertFalse(taulell.dispara(taulellVictima,12,3)); 
+		assertFalse(taulell.dispara(taulellVictima,4,22)); 
+		assertFalse(taulell.dispara(taulellVictima,10,10)); 
+		
+		//System.out.print(taulellVictima.Construeix_Taulell( taulellVictima.getMatriu()));
+		
+	}
+	
+	@Test
+	public void modificaMatriu() {
+		
+		Taulell taulell= new Taulell(10,10);
+		
+		taulell.modificaMatriu(1, 0, 0);
+		taulell.modificaMatriu(2, 5, 5);
+		taulell.modificaMatriu(3, 9, 9);
+		
+		assertEquals(taulell.getValor(0, 0),1);
+		assertEquals(taulell.getValor(9, 9),3);
+		assertEquals(taulell.getValor(5, 5),2);
+		
+		taulell.modificaMatriu(3, 5, 5);
+		taulell.modificaMatriu(2, 0, 0);
+		taulell.modificaMatriu(1, 9, 9);
+		
+		assertEquals(taulell.getValor(5, 5),3);
+		assertEquals(taulell.getValor(0, 0),2);
+		assertEquals(taulell.getValor(9, 9),1);
+		
+		
+	}
+	
 }

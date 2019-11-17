@@ -30,5 +30,46 @@ public class BoaTest {
 		
 		
 	}
+	
+	@Test
+	public void DisparatTest() {
+		Boat b = new Boat(5);
+		
+		b.disparat();
+		assertEquals(b.getVides(),4);
+		b.disparat();
+		assertEquals(b.getVides(),3);
+		b.disparat();
+		assertEquals(b.getVides(),2);
+		b.disparat();
+		assertEquals(b.getVides(),1);
+		b.disparat();
+		assertEquals(b.getVides(),0);
+		b.disparat();
+		assertEquals(b.getVides(),-1);//No suposa cap problema, 
+		//ja que en la partida no es veura influenciat si passa de 0 la vida del vaixell
+		//mentres arribi a 0 no hi ha cap probelma, ho comprovem en un altre mètode	
+		
+	}
+	
+	@Test
+	public void afegeixCoordenadaTest() {
+		
+		Boat b=new Boat(2);
+		
+		b.afegeixCoordenada(0, 0);
+		
+		assertEquals(b.getCoordenadaX(0),0);
+		assertEquals(b.getCoordenadaY(0),0);
+		assertEquals(b.getAux(),1);
+		
+		
+		b.afegeixCoordenada(1, 1);
+		
+		assertEquals(b.getCoordenadaX(1),1);
+		assertEquals(b.getCoordenadaY(1),1);
+		assertEquals(b.getAux(),2);
+		
+	}
 
 }
