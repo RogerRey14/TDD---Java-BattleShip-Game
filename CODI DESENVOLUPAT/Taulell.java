@@ -1,4 +1,4 @@
-
+import java.util.ArrayList;
 
 public class Taulell { //Inicialmente 10x10
 	
@@ -16,6 +16,8 @@ public static final int ENFONSAT =  4;
 	private int[][] matriuTaulell;
 	private String caracter="|   ";
 	private String string_taulell;
+	private int num;
+	private Boat[] llistaVaixells;
 	
 	private NumAleatori random;
 	
@@ -24,8 +26,8 @@ public static final int ENFONSAT =  4;
 		mida_horitzontal=mida_x;
 		mida_vertical=mida_y;
 		matriuTaulell = new int[mida_vertical][mida_horitzontal];
-		
-		
+		num=0;
+		llistaVaixells= new Boat[10];
 		string_taulell = Construeix_Taulell(matriuTaulell);
 		
 		//printa_matriu(string_taulell);
@@ -34,26 +36,30 @@ public static final int ENFONSAT =  4;
 		
 	}
 	
+	public int getMidaX() {return mida_horitzontal;}
+
+	public int getMidaY() {return mida_vertical;}
+	
 	public String get_string_taulell() { return string_taulell;}
 	
 	//Constrium la matriu 10x10
 	public String Construeix_Taulell(int[][] matriu2) {
 		
 		String taulell = "";
-		taulell = taulell+("    | A | B | C | D | E | F | G | H | I | J | \n");
+		taulell = taulell+("   | A | B | C | D | E | F | G | H | I | J | \n");
 		for (int i = 0; i < mida_vertical; i++) {
-			taulell = taulell+("----|---|---|---|---|---|---|---|---|---|---| \n");
+			taulell = taulell+("---|---|---|---|---|---|---|---|---|---|---| \n");
 			if(i<9) {
-				taulell = taulell+" ";
+				taulell = taulell;
 			}
-			taulell = taulell+(" " + (i+1) + " |");
+			taulell = taulell+(" " + (i) + " |");
 			for (int j = 0; j < mida_horitzontal; j++)
 			{
 				taulell = taulell+(" " + this.traductor(matriuTaulell[i][j]) + " |");
 			}
 			taulell = taulell + " \n";
 		}	
-		taulell = taulell+("----|---|---|---|---|---|---|---|---|---|---| \n");
+		taulell = taulell+("---|---|---|---|---|---|---|---|---|---|---| \n");
 		
 		
 		return taulell;
@@ -61,6 +67,13 @@ public static final int ENFONSAT =  4;
 	
 	public int[][] getMatriu(){return this.matriuTaulell;}
 	
+	
+	//Modifiquem el valor de la matriu a la posició desitjada
+	public void modificaMatriu(int valor, int posX, int posY) //hacer test
+	{
+		this.matriuTaulell[posX][posY]=valor;
+		
+	}
 	
 	
 	public void setMatriu(int[][] matriu) {matriuTaulell = matriu; }
@@ -121,12 +134,19 @@ public static final int ENFONSAT =  4;
 								}
 							}
 							if(!vaixell) {
+								
+								Boat barco=new Boat(mida);
+								
 								for(i = 0; i<mida;i++)
 								{
 									
 									this.matriuTaulell[x+i][y]= VAIXELL;
+									barco.afegeixCoordenada(x+i, y);
+									
 									
 								}
+								this.llistaVaixells[num]=barco;
+								num++;
 								colocat=true;
 								return colocat;
 							}
@@ -149,16 +169,21 @@ public static final int ENFONSAT =  4;
 								}
 							}
 							if(!vaixell) {
+								
+								Boat barco=new Boat(mida);
 								for(i = 0; i<mida;i++)
 								{
 									
 									this.matriuTaulell[x][y+i]= VAIXELL;
-									
+									barco.afegeixCoordenada(x, y+i);
 								}
+								this.llistaVaixells[num]=barco;
+								num++;
 								colocat=true;
 								return colocat;
 							}
 					}
+						
 			}
 			
 		}
@@ -175,7 +200,7 @@ public static final int ENFONSAT =  4;
 	
 	
 	//Printa la matriu per pantalla
-	private void printa_matriu(String cadena)
+	public void printa_matriu(String cadena)
 	{
 		
 		
@@ -211,6 +236,8 @@ public static final int ENFONSAT =  4;
 		
 	}
 	
+	//falta test
+	//creem taulell de la màquina i coloca els vaixells en posicions aleatories de la matriu
 	public void creaTaulellIA()
 	{
 		int n=5;
@@ -240,6 +267,77 @@ public static final int ENFONSAT =  4;
 				n--;
 		}
 		
+	}
+	
+	public boolean dispara(Taulell t, int x, int y)
+	{
+		if(x<0 || x>9) 
+		{
+			return false;
+		}
+		if(y<0 || y>9) 
+		{
+			return false;
+		}
+
+		
+		if(t.getMatriu()[x][y]==AIGUA || t.getMatriu()[x][y]==TOCAT || t.getMatriu()[x][y]==ENFONSAT )
+		{
+			return false;
+		}
+		else {
+
+			if(t.getMatriu()[x][y]==INEXPLORAT)
+			{
+				t.modificaMatriu(AIGUA, x, y);
+				return false;
+			}
+			else
+			{
+				if(t.getBoat(x,y).getVides()==1)
+				{
+					for(int i=0;i<t.getBoat(x,y).getLongitud();i++) 
+					{
+							t.modificaMatriu(ENFONSAT,t.getBoat(x, y).getCoordenadaX(0+i)
+									,t.getBoat(x, y).getCoordenadaY(0+i) );
+					}
+	
+				}
+				
+				else
+					t.modificaMatriu(TOCAT, x, y);
+					
+				t.getBoat(x,y).disparat();
+	
+			}
+		}
+		return true;
+				
+		
+		
+		
+	}
+
+	//falta test
+	//retornem un objecte Boat de una llista de Boats en funció d'una de les posicions a la matriu del vaixell
+	private Boat getBoat(int x,int y) {
+		
+		
+		
+		for(int i=0; i<num;i++)
+		{
+			//Boat b= (Boat) this.llistaVaixells[i];
+			for(int j=0; j<llistaVaixells[i].getLongitud();j++)
+			{
+				if(x==llistaVaixells[i].getCoordenadaX(j) && y==llistaVaixells[i].getCoordenadaY(j))
+					return llistaVaixells[i];
+			
+			}
+			
+			
+		}
+		return null;
+
 	}
 	
 	
