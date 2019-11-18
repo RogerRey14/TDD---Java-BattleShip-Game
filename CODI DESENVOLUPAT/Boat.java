@@ -18,10 +18,7 @@ public class Boat {
 	
 	//Constructors---------------------------------------------------------------
 	
-	Boat(){
-		
-		this.name="";
-	}
+
 	
 	Boat( int longitud){
 		
@@ -39,11 +36,8 @@ public class Boat {
 			case(3):
 				this.name="Creuer";
 				break;
-			case(2):
-				this.name="Fragata";
-				break;
 			default:
-				this.name="";
+				this.name="Fragata";
 				break;
 				
 		}

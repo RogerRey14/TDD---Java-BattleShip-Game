@@ -7,7 +7,7 @@ public class LlegueixTeclat {
 	public int LlegeixInt() {
 		
 		Scanner sc = new Scanner(System.in);
-		int x= sc.nextInt();
+		int x = (int) sc.next().charAt(0) - 48;
 		
 		return x;
 		

@@ -12,13 +12,23 @@ public class Joc {
 	
 	private Taulell taulellJugador; 
 	private Taulell taulellIA;
+	private LlegueixTeclat teclat;
+	private int x;
+	private int y;
+	private int horitzontal;
+	
+	
 	
 	Joc(Taulell t1, Taulell t2)
 	{
 		this.taulellJugador=t1;
 		this.taulellIA=t2;
+		this.teclat = new LlegueixTeclat();
 		
 	}
+	
+	public Taulell getTaulellJugador() {return this.taulellJugador;} 
+	public Taulell getTaulellIA() {return this.taulellIA;} 
 	
 	//Creem taulells i inicialitzem la partida escrivint per teclat les posicions dels vaixell 
 	//i on els volem colocar, després els mostrem per pantalla
@@ -28,9 +38,9 @@ public class Joc {
 
 		//emplenar taulell jugador
 		//Scanner sc = new Scanner(System.in);
-		boolean horitzontal = false, valorinvalid;
+		boolean horitzontal = false;
+		boolean	valorinvalid=false;
 		int i=5;
-		LlegueixTeclat teclat = new LlegueixTeclat();
 		while(i>1)
 		{
 			
@@ -43,60 +53,63 @@ public class Joc {
 			
 			System.out.println();
 			System.out.println("Coloca el vaixell amb "+i+" caselles");
-			System.out.println("Posició inicial X(número): ");
-			
-			//int x= sc.nextInt();
-			
-			int x=teclat.LlegeixInt();
-			
-			if(x>9 || x<0)
+			LlegeixCoordenades();
+			if(this.x>9 || this.x<0)
 				valorinvalid=true;
 			
-
+			if(this.y>9 || this.y<0)
+				valorinvalid=true;
 			
-			System.out.println("Posició inicial Y(lletra): ");
 			
-			//char col= sc.next().charAt(0);
 		
-			char col=teclat.LlegeixChar();
-			
-			int y=this.tradueix(col);
-			if(y>9 || y<0)
-				valorinvalid=true;
-			
-			System.out.println("Vaixell vertical(0) o horitzontal?(1): ");
-			int hor = teclat.LlegeixInt();
-			
-			
-			if(hor==1)
+			if(this.horitzontal==1)
 				horitzontal=true;
 			else {
-				if(hor==0)
+				if(this.horitzontal==0)
 					horitzontal=false;
 				else
 					valorinvalid=true;
 			}
 			
-			if(!valorinvalid)
-				valorinvalid=taulellJugador.colocaVaixell(x,y,i,horitzontal);
-			if(valorinvalid) {
-				i--;
-				taulellJugador.Construeix_Taulell(taulellJugador.getMatriu());
-				System.out.print(taulellJugador.Construeix_Taulell( taulellJugador.getMatriu()));
+			if(!valorinvalid) {
+				if(taulellJugador.colocaVaixell(x,y,i,horitzontal)) {
+					i--;
+					taulellJugador.Construeix_Taulell(taulellJugador.getMatriu());
+					System.out.print(taulellJugador.Construeix_Taulell( taulellJugador.getMatriu()));
+				}
 			}
+				
 			
 			
 		}
-		
-		
-		
-		
 		
 		//emplenar taulell IA
 		
 		taulellIA.creaTaulellIA();
 		
+	}
+	
+	public void LlegeixCoordenades() {
 		
+		System.out.println("Posició inicial X(número): ");
+		
+		//int x= sc.nextInt();
+		
+		this.x = teclat.LlegeixInt();
+		
+		System.out.println("Posició inicial Y(lletra): ");
+		
+		//char col= sc.next().charAt(0);
+	
+		char col = teclat.LlegeixChar();
+		
+		this.y = this.tradueix(col);
+		
+		
+		System.out.println("Vaixell vertical(0) o horitzontal?(1): ");
+		this.horitzontal = teclat.LlegeixInt();
+		
+
 	}
 	
 	//Per escriure la coordenada Y escrivim una lletra i amb aquest mètode la pasem a int
@@ -136,23 +149,14 @@ public class Joc {
 			return 9;
 		default:
 			return -1;
-
-		
-		
-		
-		
-		
-		
-		
 		}
 		
-		
-		
-		
+
 	}
 
 	
 	//Comprovem que no hi hagin vaixells en els taulells per finalizar la partida
+	//S'aplica correctament condition i decision coverage
 	public boolean acabaJoc()
 	{
 		int[][] mIA=this.taulellIA.getMatriu();
@@ -187,6 +191,21 @@ public class Joc {
 		else
 			return false;
 		
+	}
+	
+	
+	public void setTeclat(LlegueixTeclat t) {this.teclat = t;}
+	
+	public int getX() {
+		return this.x;
+	}
+	
+	public int getY() {
+		return this.y;
+	}
+	
+	public int getHoritzontal() {
+		return this.horitzontal;
 	}
 	
 	

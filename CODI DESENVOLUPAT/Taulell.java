@@ -18,9 +18,9 @@ public static final int ENFONSAT =  4;
 	private String string_taulell;
 	private int num;
 	private Boat[] llistaVaixells;
-	
 	private NumAleatori random;
 	
+	//
 	Taulell(int mida_x, int mida_y ) {
 		
 		mida_horitzontal=mida_x;
@@ -30,15 +30,17 @@ public static final int ENFONSAT =  4;
 		llistaVaixells= new Boat[10];
 		string_taulell = Construeix_Taulell(matriuTaulell);
 		
-		//printa_matriu(string_taulell);
-		
 		
 		
 	}
 	
-	public int getMidaX() {return mida_horitzontal;}
+	public Boat[] getLlistaVaixells() { return this.llistaVaixells ;}
+	
+	public int getNumVaixells() {return this.num;}
+	
+	public int getMidaX() {return this.mida_horitzontal;}
 
-	public int getMidaY() {return mida_vertical;}
+	public int getMidaY() {return this.mida_vertical;}
 	
 	public String get_string_taulell() { return string_taulell;}
 	
@@ -49,13 +51,10 @@ public static final int ENFONSAT =  4;
 		taulell = taulell+("   | A | B | C | D | E | F | G | H | I | J | \n");
 		for (int i = 0; i < mida_vertical; i++) {
 			taulell = taulell+("---|---|---|---|---|---|---|---|---|---|---| \n");
-			if(i<9) {
-				taulell = taulell;
-			}
 			taulell = taulell+(" " + (i) + " |");
 			for (int j = 0; j < mida_horitzontal; j++)
 			{
-				taulell = taulell+(" " + this.traductor(matriuTaulell[i][j]) + " |");
+				taulell = taulell+(" " + this.traductor(matriu2[i][j]) + " |");
 			}
 			taulell = taulell + " \n";
 		}	
@@ -69,14 +68,11 @@ public static final int ENFONSAT =  4;
 	
 	
 	//Modifiquem el valor de la matriu a la posició desitjada
-	public void modificaMatriu(int valor, int posX, int posY) //hacer test
+	public void modificaMatriu(int valor, int posX, int posY) 
 	{
 		this.matriuTaulell[posX][posY]=valor;
 		
 	}
-	
-	
-	public void setMatriu(int[][] matriu) {matriuTaulell = matriu; }
 	
 	
 	//comprovem si a la posició pasada per paràmetre de la matriu ja està ocupada per un vaixell o no
@@ -92,6 +88,8 @@ public static final int ENFONSAT =  4;
 	
 	
 	//Es coloca el vaixell a al taulell, comprovant totes les posicions.
+	//Comprovem condition i decision coverage
+	//Comprovem path coverage
 	public boolean colocaVaixell(int x, int y, int mida, boolean horitzontal) 
 	{
 		boolean colocat=false;
@@ -137,14 +135,18 @@ public static final int ENFONSAT =  4;
 								
 								Boat barco=new Boat(mida);
 								
+								//loop testing simple----------------------------------------------------------
+								
 								for(i = 0; i<mida;i++)
 								{
 									
 									this.matriuTaulell[x+i][y]= VAIXELL;
 									barco.afegeixCoordenada(x+i, y);
-									
-									
+										
 								}
+								
+								//loop testing simple--------------------------------------------------------------- 
+								
 								this.llistaVaixells[num]=barco;
 								num++;
 								colocat=true;
@@ -199,6 +201,7 @@ public static final int ENFONSAT =  4;
 	public int getValor(int x, int y) {return matriuTaulell[x][y];}
 	
 	
+	/*
 	//Printa la matriu per pantalla
 	public void printa_matriu(String cadena)
 	{
@@ -207,7 +210,7 @@ public static final int ENFONSAT =  4;
 		System.out.print(cadena);
 
 	}
-	
+	*/
 	
 	
 	//Traduim els valors del taulell original per caràcters de tipo char, per a que visualment sigui més fàcil indenticar-ho
@@ -230,9 +233,9 @@ public static final int ENFONSAT =  4;
 
 	}
 	
-	public void setRandom(NumAleatori option)
+	public void setRandom(NumAleatori r)
 	{
-		this.random=option;
+		this.random=r;
 		
 	}
 	
@@ -249,8 +252,8 @@ public static final int ENFONSAT =  4;
 			colocat=false;
 			
 			//generar randoms x, y, horitzontal
-			int x=this.random.generaNumeroAleatori(0, 9);
-			int y=this.random.generaNumeroAleatori(0, 9);
+			int x= this.random.generaNumeroAleatori(0, 9);
+			int y= this.random.generaNumeroAleatori(0, 9);
 			int mida=n;
 			int horitzontalaux=random.generaNumeroAleatori(0, 1);
 			
@@ -318,15 +321,14 @@ public static final int ENFONSAT =  4;
 		
 	}
 
-	//falta test
+	
 	//retornem un objecte Boat de una llista de Boats en funció d'una de les posicions a la matriu del vaixell
-	private Boat getBoat(int x,int y) {
+	public Boat getBoat(int x,int y) {
 		
 		
 		
 		for(int i=0; i<num;i++)
 		{
-			//Boat b= (Boat) this.llistaVaixells[i];
 			for(int j=0; j<llistaVaixells[i].getLongitud();j++)
 			{
 				if(x==llistaVaixells[i].getCoordenadaX(j) && y==llistaVaixells[i].getCoordenadaY(j))
@@ -340,6 +342,33 @@ public static final int ENFONSAT =  4;
 
 	}
 	
+	//IA dispara de forma aleatoria a jugador
+	public boolean IAdispara(Taulell t) {
+		
+		int x= this.random.generaNumeroAleatori(0, 9);
+		int y= this.random.generaNumeroAleatori(0, 9);
+		
+		return dispara(t,x,y);
+	}
+	
+	//permet traduir la matriu enemiga per no veure'n els vaixells
+	public int[][] traductorIA(int[][] matriu) //test
+	{
+		int[][] matriu_visible= new int[mida_vertical][mida_horitzontal];
+		for(int i=0;i<this.mida_horitzontal;i++)
+		{
+			for(int j=0; j<this.mida_vertical;j++)
+			{
+				if (matriu[i][j]==VAIXELL)
+					matriu_visible[i][j]=INEXPLORAT;
+				else
+					matriu_visible[i][j]=matriu[i][j];
+			}
+		}
+		return matriu_visible;
+		
+		
+	}
 	
 }
 
