@@ -1,133 +1,375 @@
-/*
-public class Taulell { //Inicialmente 10x25
+import java.util.ArrayList;
+
+public class Taulell { //Inicialmente 10x10
 	
+
+
+public static final int INEXPLORAT =  0;
+public static final int VAIXELL =  1;
+public static final int AIGUA =  2;
+public static final int TOCAT =  3;
+public static final int ENFONSAT =  4;
+
+
 	private int mida_horitzontal;
 	private int mida_vertical;
-	private String[][] Matriu;
-	private String caracter="   |";
-	private String string_taulell="";
+	private int[][] matriuTaulell;
+	private String caracter="|   ";
+	private String string_taulell;
+	private int num;
+	private Boat[] llistaVaixells;
+	private NumAleatori random;
 	
+	//
 	Taulell(int mida_x, int mida_y ) {
 		
 		mida_horitzontal=mida_x;
 		mida_vertical=mida_y;
-		Matriu = new String[mida_vertical][mida_horitzontal];
-		
-		for (int i=0; i<mida_vertical;i++) 
-		{
-			for (int j=0; j<mida_horitzontal;j++)
-			{
-				Matriu[i][j]=caracter + " ";
-				
-			}
-		}
-		
-		Construeix_Taulell(Matriu);
-		
-		printa_matriu(string_taulell);
+		matriuTaulell = new int[mida_vertical][mida_horitzontal];
+		num=0;
+		llistaVaixells= new Boat[10];
+		string_taulell = Construeix_Taulell(matriuTaulell);
 		
 		
 		
 	}
+	
+	public Boat[] getLlistaVaixells() { return this.llistaVaixells ;}
+	
+	public int getNumVaixells() {return this.num;}
+	
+	public int getMidaX() {return this.mida_horitzontal;}
+
+	public int getMidaY() {return this.mida_vertical;}
 	
 	public String get_string_taulell() { return string_taulell;}
 	
-	private void Construeix_Taulell(String[][] matriu) {
+	//Constrium la matriu 10x10
+	public String Construeix_Taulell(int[][] matriu2) {
 		
-		System.out.println("   | A | B | C | D | E | F | G | H | I | J |");
-		//System.out.println("")
-		
-		for (int i=0; i<mida_vertical;i++) 
-		{
-			System.out.println("---|---|---|---|---|---|---|---|---|---|---|");
-			System.out.print(" " + (i) + " |");
-			for (int j=0; j<mida_horitzontal;j++)
+		String taulell = "";
+		taulell = taulell+("   | A | B | C | D | E | F | G | H | I | J | \n");
+		for (int i = 0; i < mida_vertical; i++) {
+			taulell = taulell+("---|---|---|---|---|---|---|---|---|---|---| \n");
+			taulell = taulell+(" " + (i) + " |");
+			for (int j = 0; j < mida_horitzontal; j++)
 			{
-				System.out.print(" " + matriu[i][j] + " |");
-				
+				taulell = taulell+(" " + this.traductor(matriu2[i][j]) + " |");
 			}
-			System.out.println(" " + (i));
-		}
+			taulell = taulell + " \n";
+		}	
+		taulell = taulell+("---|---|---|---|---|---|---|---|---|---|---| \n");
 		
-	}
-	
-	private void printa_matriu(String cadena)
-	{
-		
-		
-		System.out.print(cadena);
-
-	}
-	
-}
-//para comprobar tablero comparar el string (bueno con el constructor y eso)*/
-
-
-
-public class Taulell { //Inicialmente 10x25
-	
-	private int mida_horitzontal;
-	private int mida_vertical;
-	private String[][] Matriu;
-	private String caracter="   |";
-	private String string_taulell="";
-	
-	Taulell(int mida_x, int mida_y ) {
-		
-		mida_horitzontal=mida_x;
-		mida_vertical=mida_y;
-		Matriu = new String[mida_vertical][mida_horitzontal];
-		
-		for (int i=0; i<mida_vertical;i++) 
-		{
-			for (int j=0; j<mida_horitzontal;j++)
-			{
-				Matriu[i][j]=caracter;
-				
-			}
-		}
-		
-		String string_taulell = Construeix_Taulell(Matriu);
-		
-		printa_matriu(string_taulell);
-		
-		
-		
-	}
-	
-	public String get_string_taulell() { return string_taulell;}
-	
-	private String Construeix_Taulell(String[][] matriu) {
-		
-		String taulell="";
-		
-		System.out.println("   | A | B | C | D | E | F | G | H | I | J |");
-		
-		for (int i=0; i<mida_vertical;i++) 
-		{
-			//System.out.println("---|---|---|---|---|---|---|---|---|---|---|");
-			//System.out.print(" " + (i) + " |");
-			//System.out.println(i);
-
-			for (int j=0; j<mida_horitzontal;j++)
-			{
-					taulell+=caracter;
-				//System.out.print(" " + matriu[i][j] + " |");
-			}
-		taulell+='\n';
-		}
 		
 		return taulell;
+	}
+	
+	public int[][] getMatriu(){return this.matriuTaulell;}
+	
+	
+	//Modifiquem el valor de la matriu a la posició desitjada
+	public void modificaMatriu(int valor, int posX, int posY) 
+	{
+		this.matriuTaulell[posX][posY]=valor;
 		
 	}
 	
-	private void printa_matriu(String cadena)
+	
+	//comprovem si a la posició pasada per paràmetre de la matriu ja està ocupada per un vaixell o no
+	public boolean hihaVaixell(int x, int y)
+	{
+		
+		if (this.matriuTaulell[x][y]==VAIXELL)
+			return true;
+		else
+			return false;
+		
+	}
+	
+	
+	//Es coloca el vaixell a al taulell, comprovant totes les posicions.
+	//Comprovem condition i decision coverage
+	//Comprovem path coverage
+	public boolean colocaVaixell(int x, int y, int mida, boolean horitzontal) 
+	{
+		boolean colocat=false;
+		boolean vaixell = false;
+		if(x<0 || x>9) 
+		{
+			return colocat;
+		}
+		if(y<0 || y>9) 
+		{
+			return colocat;
+		}
+		
+		
+		
+		if(hihaVaixell(x,y)) 
+		{
+			
+			//System.out.println( "Posició ocupada per un vaixell");
+			
+			return colocat;
+			
+		}
+		else 
+		{
+			
+			//Posició passada per paràmetre és vàlida, ara comprovar la mida i el sentit 
+					
+					if(!horitzontal) 
+					{
+						if(x+mida-1 <= 9) 
+						{
+							int i = 0;
+							while(!vaixell && i<mida) {
+								if (!hihaVaixell(x+i,y)) {
+									i++;
+								}
+								else {
+									vaixell = true;
+								}
+							}
+							if(!vaixell) {
+								
+								Boat barco=new Boat(mida);
+								
+								//loop testing simple----------------------------------------------------------
+								
+								for(i = 0; i<mida;i++)
+								{
+									
+									this.matriuTaulell[x+i][y]= VAIXELL;
+									barco.afegeixCoordenada(x+i, y);
+										
+								}
+								
+								//loop testing simple--------------------------------------------------------------- 
+								
+								this.llistaVaixells[num]=barco;
+								num++;
+								colocat=true;
+								return colocat;
+							}
+							
+						}
+						
+						
+					}
+					else //posició horitzontal
+					{
+						if(y+mida-1 <= 9) 
+						{
+							int i = 0;
+							while(!vaixell && i<mida) {
+								if (!hihaVaixell(x,y+i)) {
+									i++;
+								}
+								else {
+									vaixell = true;
+								}
+							}
+							if(!vaixell) {
+								
+								Boat barco=new Boat(mida);
+								for(i = 0; i<mida;i++)
+								{
+									
+									this.matriuTaulell[x][y+i]= VAIXELL;
+									barco.afegeixCoordenada(x, y+i);
+								}
+								this.llistaVaixells[num]=barco;
+								num++;
+								colocat=true;
+								return colocat;
+							}
+					}
+						
+			}
+			
+		}
+		
+		return colocat;
+		
+	}
+	
+	
+	
+	
+	//Retorna el valor de la posició passada per paràmetre de la matriu
+	public int getValor(int x, int y) {return matriuTaulell[x][y];}
+	
+	
+	/*
+	//Printa la matriu per pantalla
+	public void printa_matriu(String cadena)
 	{
 		
 		
 		System.out.print(cadena);
 
 	}
+	*/
+	
+	
+	//Traduim els valors del taulell original per caràcters de tipo char, per a que visualment sigui més fàcil indenticar-ho
+	public char traductor(int constant)
+	{
+		switch (constant)
+		{
+		case VAIXELL:
+			return 'V';
+		case AIGUA:
+			return 'A';
+		case TOCAT:
+			return 'x';
+		case ENFONSAT:
+			return 'X';
+		default:
+			return 'o';
+		
+		}
+
+	}
+	
+	public void setRandom(NumAleatori r)
+	{
+		this.random=r;
+		
+	}
+	
+	//falta test
+	//creem taulell de la màquina i coloca els vaixells en posicions aleatories de la matriu
+	public void creaTaulellIA()
+	{
+		int n=5;
+		boolean horitzontal;
+		boolean colocat=false;
+		
+		while(n!=1) {
+			
+			colocat=false;
+			
+			//generar randoms x, y, horitzontal
+			int x= this.random.generaNumeroAleatori(0, 9);
+			int y= this.random.generaNumeroAleatori(0, 9);
+			int mida=n;
+			int horitzontalaux=random.generaNumeroAleatori(0, 1);
+			
+			
+			if(horitzontalaux==1)
+				horitzontal=true;
+			else
+				horitzontal=false;
+					
+			colocat=this.colocaVaixell(x, y, mida, horitzontal);
+			
+		
+			if(colocat==true)
+				n--;
+		}
+		
+	}
+	
+	public boolean dispara(Taulell t, int x, int y)
+	{
+		if(x<0 || x>9) 
+		{
+			return false;
+		}
+		if(y<0 || y>9) 
+		{
+			return false;
+		}
+
+		
+		if(t.getMatriu()[x][y]==AIGUA || t.getMatriu()[x][y]==TOCAT || t.getMatriu()[x][y]==ENFONSAT )
+		{
+			return false;
+		}
+		else {
+
+			if(t.getMatriu()[x][y]==INEXPLORAT)
+			{
+				t.modificaMatriu(AIGUA, x, y);
+				return false;
+			}
+			else
+			{
+				if(t.getBoat(x,y).getVides()==1)
+				{
+					for(int i=0;i<t.getBoat(x,y).getLongitud();i++) 
+					{
+							t.modificaMatriu(ENFONSAT,t.getBoat(x, y).getCoordenadaX(0+i)
+									,t.getBoat(x, y).getCoordenadaY(0+i) );
+					}
+	
+				}
+				
+				else
+					t.modificaMatriu(TOCAT, x, y);
+					
+				t.getBoat(x,y).disparat();
+	
+			}
+		}
+		return true;
+				
+		
+		
+		
+	}
+
+	
+	//retornem un objecte Boat de una llista de Boats en funció d'una de les posicions a la matriu del vaixell
+	public Boat getBoat(int x,int y) {
+		
+		
+		
+		for(int i=0; i<num;i++)
+		{
+			for(int j=0; j<llistaVaixells[i].getLongitud();j++)
+			{
+				if(x==llistaVaixells[i].getCoordenadaX(j) && y==llistaVaixells[i].getCoordenadaY(j))
+					return llistaVaixells[i];
+			
+			}
+			
+			
+		}
+		return null;
+
+	}
+	
+	//IA dispara de forma aleatoria a jugador
+	public boolean IAdispara(Taulell t) {
+		
+		int x= this.random.generaNumeroAleatori(0, 9);
+		int y= this.random.generaNumeroAleatori(0, 9);
+		
+		return dispara(t,x,y);
+	}
+	
+	//permet traduir la matriu enemiga per no veure'n els vaixells
+	public int[][] traductorIA(int[][] matriu) //test
+	{
+		int[][] matriu_visible= new int[mida_vertical][mida_horitzontal];
+		for(int i=0;i<this.mida_horitzontal;i++)
+		{
+			for(int j=0; j<this.mida_vertical;j++)
+			{
+				if (matriu[i][j]==VAIXELL)
+					matriu_visible[i][j]=INEXPLORAT;
+				else
+					matriu_visible[i][j]=matriu[i][j];
+			}
+		}
+		return matriu_visible;
+		
+		
+	}
 	
 }
-//para comprobar tablero comparar el string (bueno con el constructor y eso)
+
+
