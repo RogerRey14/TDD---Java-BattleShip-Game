@@ -4,12 +4,25 @@ import org.junit.Test;
 
 public class TestJoc {
 
+	@Test 
+	public void testJoc()
+	{
+		Taulell t1= new Taulell(10,10);
+		Taulell t2= new Taulell(10,10);
+		Joc joc=new Joc(t1,t2);
+		
+		assertEquals(t1,joc.getTaulellJugador());
+		assertEquals(t2,joc.getTaulellIA());
+		
+		
+	}
+	
+	
 	//Test per comprovar si acaba la partida una vega s'hagin enfonsat els tots els vaixell
+	//S'aplica correctament condition i decision coverage------------------------------------------------------------------------------------------------------------
 	@Test
 	public void testAcabaJoc() {
-		
-			
-			
+	
 			Taulell taulell= new Taulell(10,10);
 			taulell.colocaVaixell(2, 5, 3, true);
 			taulell.colocaVaixell(5, 0, 2, false);
@@ -44,12 +57,12 @@ public class TestJoc {
 			taulell2.dispara(taulell, 9, 1);
 			taulell2.dispara(taulell, 9, 2);
 			taulell2.dispara(taulell, 9, 3);
-			
-			
-			//taulell.dispara(taulell2,1 ,2 );
-			//taulell.dispara(taulell2, 1, 3);
+
 		
 			assertTrue(joc.acabaJoc());
+			
+			taulell.colocaVaixell(2, 5, 3, true); //deixem un vaixell del jugador viu per comprovar si la partida acaba
+			//guanyant l'ia
 			
 			taulell.dispara(taulell2,2,5); 
 			taulell.dispara(taulell2,2,6); 
@@ -70,6 +83,11 @@ public class TestJoc {
 			taulell.dispara(taulell2, 9, 3);
 			
 			assertTrue(joc.acabaJoc());
+			
+			
+			
+			//comprovem que acabi el joc si perd el jugador
+			
 		
 	}
 	
@@ -119,17 +137,30 @@ public class TestJoc {
 		Joc joc = new Joc(taulell,taulell2);
 		
 		
-		MockLlegueixTeclat mock = new MockLlegueixTeclat();
-		
-		assertEquals(mock.LlegeixInt(),0); //Posició x(int) llegida per teclat
-		assertEquals(mock.LlegeixChar(),'a');//Posició y(char) llegida per teclat
-		assertEquals(mock.LlegeixInt(),0);//Sentit vaixell horitzontal o vertical (int) llegit per teclat
 		
 		
 		//assertEquals(joc.preparaTaulells(),0);
 		
 		
 		
+	}
+	
+	@Test
+	public void llegeixCoordenadesTest() {
+		Taulell taulell= new Taulell(10,10);
+		Taulell taulell2= new Taulell(10,10);
+		
+		Joc joc = new Joc(taulell,taulell2);
+		
+		MockLlegueixTeclat mock = new MockLlegueixTeclat();
+		joc.setTeclat(mock);
+		
+		joc.LlegeixCoordenades();
+		
+		assertEquals(joc.getX(), 0);
+		assertEquals(joc.getY(), 0);
+		assertEquals(joc.getHoritzontal(), 0);
+
 	}
 	
 	

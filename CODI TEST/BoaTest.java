@@ -5,7 +5,7 @@ import org.junit.Test;
 public class BoaTest {
 
 	@Test
-	public void test() {
+	public void testBoat() {
 		
 	//Prova de caixa Negra --- getters ------------
 		
@@ -24,10 +24,6 @@ public class BoaTest {
 		assertEquals(b3.getLongitud(),4);
 		assertEquals(b4.getLongitud(),2);
 	
-		
-		
-		
-		
 		
 	}
 	
